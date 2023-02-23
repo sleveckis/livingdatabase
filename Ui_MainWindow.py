@@ -62,7 +62,7 @@ class Ui_MainWindow(object):
         self.NetlLogo = QLabel(self.centralwidget)
         self.NetlLogo.setObjectName(u"NetlLogo")
         self.NetlLogo.setGeometry(QRect(20, 10, 141, 51))
-        self.NetlLogo.setPixmap(QPixmap(u"media/netl_logo.jpg"))
+        self.NetlLogo.setPixmap(QPixmap(u"media/netl_logo_transparent2.png"))
         self.NetlLogo.setScaledContents(True)
         self.tableWidget = QTableWidget(self.centralwidget)
         self.tableWidget.setObjectName(u"tableWidget")
