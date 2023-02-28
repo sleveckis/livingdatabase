@@ -59,12 +59,12 @@ class DatabaseConnector():
             database_list.append(d[0])
 
         test_dba = {
-            "CoolDatabase":  ["tableForTwo", "cooltableNice", "mySweetTable"],
-            "EvilDatabase":  ["villainousTable", "sinisterTable", "evilTable"],
+            "CoolDatabase":  ["tableForTwo", "cooltableNice", "mySweetTable", "usefulTable", "niceTableToHave"],
+            "EvilDatabase":  ["villainousTable"],
             "RegularDatabase":  ["tableOfHotDogs", "roundTable", "partyTable"],
             "ScienceDatabase":  ["tableOfFrogs", "taleOfNewts", "coolRocks.bizTable"],
-            "UselessDatabase":  ["tableTime", "emptyTable", "bizzareTable"],
-            "ThisIsADatabase":  ["tableTime", "emptyTable", "bizzareTable", "extraTable"],
+            "UselessDatabase":  ["oldTable", "emptyTable", "corruptTable"],
+            "ThisIsADatabase":  ["thatTable", "thisTable", "standardTable", "extraTable"]
         }
         return test_dba
         #return (database_list)

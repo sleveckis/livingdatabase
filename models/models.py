@@ -4,18 +4,20 @@ from PySide6 import QtCore
 
 class CustomQColumnModel(QStandardItemModel):
     """
-    A class to hold the data to display in the QColumnView. A subclass of QStandardItemModel
+    A class to hold the data to display in the QColumnView. A subclass of QStandardItemModel, which is subclassed from QAbstractitemModel
     
     Attributes
     --------
         dba = a dictionary that holds all databases in the living database server, and their constituent tables
+        databaseListLength = how long the first list in the cascade view is (# of databases)
+        tableListLengths = a list of how many tables belong to each database, indexed in order of database 
 
     Methods
     --------
         generate_tree():
-            Convert the dictionary into QStandardItems that can be dynamically displayed by the QColumnView
+            Convert the dictionary into QStandardItems that can be dynamically displayed by the QColumnView, 
+            by setting the inherited setItem() function for QStandardItemModel
     """
-    #TODO: consider handling default behavior where no dictionary is passed in
     def __init__(self, dba=None):
         """
         Parameters:
@@ -24,22 +26,41 @@ class CustomQColumnModel(QStandardItemModel):
                 The dictionary of databases and tables
         """
         super(CustomQColumnModel, self).__init__()
-        self.dba = dba 
-        self.setVerticalHeaderItem(0, QStandardItem("Database"))
-        self.setVerticalHeaderItem(1, QStandardItem("Table"))
+        if dba is not None:
+            self.dba = dba 
+            self.setVerticalHeaderItem(0, QStandardItem("Database"))
+            self.setVerticalHeaderItem(1, QStandardItem("Table"))
+            self.databaseListLength = 0
+            self.tableListLengths = []
+        else:
+             dba = {}
  
     def generate_tree(self):
         """
-        Convert the dictionary into QStandardItems that can be dynamically displayed by the QColumnView
+        Set each database name as an item, and set each table therein as a child of the corresonding item
+        setItem(row, col, item)
+            sets an item at the given row and column
+        item(row, col)
+            returns the tiem for the given row and column
+
+        NOTE: There's a bug that prints an invalid index error to the console when clicking on a *database*
+        after having clicked on a *table*, if that database's row count is greater than 2 (zero-indexed).
+        It appears to have no effect on program behavior. 
         """
-        # Here's the magic
         for row, db_name in enumerate(self.dba.keys()):
-            self.setItem(row, 0, QStandardItem(db_name))
-            item = self.item(row, 0)
+            self.setItem(row, QStandardItem(str(db_name)))
+            item = self.item(row)
             item.setEditable(False)
-            print(type(item))
+
+            table_count = 0
             for rrow, table_name in enumerate(self.dba.get(item.text())):
-                item.setChild(rrow, 0, QStandardItem(str(table_name)))
+                item.setChild(rrow, QStandardItem(str(table_name)))
+                table_count +=1
+
+            self.tableListLengths.append(table_count)
+        self.databaseListLength = len(self.tableListLengths)
+        
+            
 
 class CustomQTableModel(QtCore.QAbstractTableModel):
     """

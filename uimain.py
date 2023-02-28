@@ -30,9 +30,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             Instance of the DatabaseConnector class
         model: CustomQColumnModel
             Instance of CustomQColumnModel, initialized with the dictionary of databases/tables  
+
+    Important Inherited Attributes
+    ---------
+        ColumnView : QColumnView (from Ui_MainWindow)
+            QColumnView is a subclass of QAbstractItemView
+
+        TableView : QTableView (from Ui_MainWindow)
+            QColumnView is a subclass of QAbstractItemView
+
     """
     def __init__(self):
-        # Ui_MainWindow has no __init__() so I guess it defaults to QMainWindow's constructor
+        # Ui_MainWindow has no __init__() so it defaults to QMainWindow's constructor
         super().__init__()
         self.ui = Ui_MainWindow()
         self.setupUi(self)
