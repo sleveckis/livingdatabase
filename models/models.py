@@ -36,9 +36,40 @@ class CustomQColumnModel(QStandardItemModel):
         for row, db_name in enumerate(self.dba.keys()):
             self.setItem(row, 0, QStandardItem(db_name))
             item = self.item(row, 0)
+            item.setEditable(False)
+            print(type(item))
             for rrow, table_name in enumerate(self.dba.get(item.text())):
                 item.setChild(rrow, 0, QStandardItem(str(table_name)))
 
+class CustomQTableModel(QtCore.QAbstractTableModel):
+    """
+    A Custom model to popoulate a QTableView with a pandas dataframe
+
+    Parameters
+    ----------
+        data: the dataframe that's passed in to initialize the table (model)
+    """
+    def __init__(self, data=None):
+        #QtCore.QAbstractTableModel.__init__(self, parent)
+        super().__init__()
+        self._data = data
+
+    def rowCount(self, parent=None):
+        # Returns length of a numpy representation of the pd dataframe
+        # tells the data model how many row's we'll insert
+        return len(self._data.values)
+
+    def columnCount(self, parent=None):
+        # tells the data model how many cols we'll insert
+        return self._data.columns.size 
+
+    def data(self, index, role=QtCore.Qt.DisplayRole):
+        if role == QtCore.Qt.DisplayRole:
+            try:
+                # .iat is just a good way to rol, col index dataframes in pd
+                return str(self._data.iat[index.row(), index.column()])
+            except IndexError:
+                return ""
 
 """
     LivingDataListModel
@@ -51,10 +82,7 @@ class LivingDataListModel(QtCore.QAbstractListModel):
         self.db_list = db_list or []
 
     def data(self, index, role):
-        # There are other roles outside of 'give me data to display'
-        # so we'll specify our type of request when we call the method
-        if role == Qt.DisplayRole:
-            # Return only the text (forseeably the database name / table name)
+        if role == QtCore.Qt.DisplayRole:
             # given the column is always zero in a 1D list, so just return row
             return self.db_list[index.row()]
 

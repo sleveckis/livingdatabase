@@ -17,8 +17,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QColumnView, QHeaderView, QLabel,
     QListView, QMainWindow, QMenuBar, QPushButton,
-    QSizePolicy, QStatusBar, QTableWidget, QTableWidgetItem,
-    QWidget)
+    QSizePolicy, QStatusBar, QTableView, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -37,10 +36,10 @@ class Ui_MainWindow(object):
         self.pushButton_2.setGeometry(QRect(830, 390, 71, 61))
         self.pushButton_3 = QPushButton(self.centralwidget)
         self.pushButton_3.setObjectName(u"pushButton_3")
-        self.pushButton_3.setGeometry(QRect(920, 390, 75, 61))
+        self.pushButton_3.setGeometry(QRect(920, 390, 71, 61))
         self.pushButton_4 = QPushButton(self.centralwidget)
         self.pushButton_4.setObjectName(u"pushButton_4")
-        self.pushButton_4.setGeometry(QRect(920, 470, 75, 61))
+        self.pushButton_4.setGeometry(QRect(920, 470, 71, 61))
         self.pushButton_5 = QPushButton(self.centralwidget)
         self.pushButton_5.setObjectName(u"pushButton_5")
         self.pushButton_5.setGeometry(QRect(830, 470, 71, 61))
@@ -52,7 +51,7 @@ class Ui_MainWindow(object):
         self.pushButton_7.setGeometry(QRect(830, 550, 71, 61))
         self.pushButton_8 = QPushButton(self.centralwidget)
         self.pushButton_8.setObjectName(u"pushButton_8")
-        self.pushButton_8.setGeometry(QRect(920, 550, 75, 61))
+        self.pushButton_8.setGeometry(QRect(920, 550, 71, 61))
         self.pushButton_9 = QPushButton(self.centralwidget)
         self.pushButton_9.setObjectName(u"pushButton_9")
         self.pushButton_9.setGeometry(QRect(740, 550, 71, 61))
@@ -64,9 +63,6 @@ class Ui_MainWindow(object):
         self.NetlLogo.setGeometry(QRect(20, 10, 141, 51))
         self.NetlLogo.setPixmap(QPixmap(u"media/netl_logo_transparent2.png"))
         self.NetlLogo.setScaledContents(True)
-        self.tableWidget = QTableWidget(self.centralwidget)
-        self.tableWidget.setObjectName(u"tableWidget")
-        self.tableWidget.setGeometry(QRect(20, 380, 701, 291))
         self.listView_3 = QListView(self.centralwidget)
         self.listView_3.setObjectName(u"listView_3")
         self.listView_3.setGeometry(QRect(740, 90, 256, 261))
@@ -88,6 +84,9 @@ class Ui_MainWindow(object):
         self.ColumnView = QColumnView(self.centralwidget)
         self.ColumnView.setObjectName(u"ColumnView")
         self.ColumnView.setGeometry(QRect(20, 90, 701, 261))
+        self.TableView = QTableView(self.centralwidget)
+        self.TableView.setObjectName(u"TableView")
+        self.TableView.setGeometry(QRect(20, 380, 701, 291))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")

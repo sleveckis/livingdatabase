@@ -59,15 +59,24 @@ class DatabaseConnector():
             database_list.append(d[0])
 
         test_dba = {
-            "dab1":  [101, "hellow", "yeehaw"],
-            "dab2":  [202, "salutations", "cowabunga"],
-            "dab3":  [303, "greetings", "weeeee"],
-            "dab4":  [404, "howdy", "expelliarmus"],
+            "CoolDatabase":  ["tableForTwo", "cooltableNice", "mySweetTable"],
+            "EvilDatabase":  ["villainousTable", "sinisterTable", "evilTable"],
+            "RegularDatabase":  ["tableOfHotDogs", "roundTable", "partyTable"],
+            "ScienceDatabase":  ["tableOfFrogs", "taleOfNewts", "coolRocks.bizTable"],
+            "UselessDatabase":  ["tableTime", "emptyTable", "bizzareTable"],
+            "ThisIsADatabase":  ["tableTime", "emptyTable", "bizzareTable", "extraTable"],
         }
         return test_dba
         #return (database_list)
 
-    def get_table_contents(self, table, n):
-        pass
+    def get_table_contents(self, table=None, n=None):
+        test_table = {
+            "What Rock" : ["Basalt", "shale", "obsidian", "quartz", "sdfsfs", "asdfasdf", "sdfasdf", "asdf", "marble"],
+            "How old is rock" : [101, 202, 333, 40151, 1551515, 663, 991, 123, 12],
+            "calories" : [123, 4141, 52343, 123123, 235234, 5345, 2312, 534534, 12313],
+            "phone number" : [23123, 12312, 53453, 867, 56567, 9878990 , 56986, 234243, 90897]
+        }
+        df = pd.DataFrame(test_table)
+        return df
 
 

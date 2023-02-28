@@ -11,13 +11,13 @@
 """
 
 import sys
-from PySide6 import QtCore, QtGui, QtWidgets
-from PySide6.QtCore import Qt
+from PySide6 import QtGui
+from PySide6.QtWidgets import QApplication, QMainWindow, QAbstractItemView
 from Ui_MainWindow import Ui_MainWindow
 from models.DatabaseConnect import DatabaseConnector
-from models.models import CustomQColumnModel
+from models.models import CustomQColumnModel, CustomQTableModel
 
-class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
+class MainWindow(QMainWindow, Ui_MainWindow):
     """
     The primary container for all of the GUI. A subclass of both QMainWindow from PySide, and Ui_Mainwindow, the generated
     module derivitave of Qt Designer.
@@ -36,17 +36,25 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.setupUi(self)
-        # Instantiate column model object as MainWindow attribute (good practice?)
+
+        # Column Model
         self.db_connection = DatabaseConnector()
-        self.model = CustomQColumnModel(self.db_connection.databases)
-        self.model.generate_tree() 
+        self.col_model = CustomQColumnModel(self.db_connection.databases)
+        self.col_model.generate_tree() 
+        self.ColumnView.setModel(self.col_model)
+        # only disables innermost list. similar code in models.py for outer list
+        self.ColumnView.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        
+        # Table Model
+        self.table_model = CustomQTableModel(self.db_connection.get_table_contents())
+        self.TableView.setModel(self.table_model)
+        self.TableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-        # Access the col view widget in our app here, via inheritance, and set it to MainWindow's model
-        # self.livdbListView.setModel(LivingDataListModel(list_o_dbs))
-        self.ColumnView.setModel(self.model)
-
-app = QtWidgets.QApplication(sys.argv)
+app = QApplication(sys.argv)
+app.setStyle('Fusion')
 window = MainWindow()
+window.setWindowTitle("Living Database")
+window.setWindowIcon(QtGui.QIcon('media/small_logo.png'))
 window.show()
 # Pass exit code to system
 sys.exit(app.exec())

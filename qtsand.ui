@@ -57,7 +57,7 @@
      <rect>
       <x>920</x>
       <y>390</y>
-      <width>75</width>
+      <width>71</width>
       <height>61</height>
      </rect>
     </property>
@@ -70,7 +70,7 @@
      <rect>
       <x>920</x>
       <y>470</y>
-      <width>75</width>
+      <width>71</width>
       <height>61</height>
      </rect>
     </property>
@@ -122,7 +122,7 @@
      <rect>
       <x>920</x>
       <y>550</y>
-      <width>75</width>
+      <width>71</width>
       <height>61</height>
      </rect>
     </property>
@@ -173,16 +173,6 @@
     </property>
     <property name="scaledContents">
      <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QTableWidget" name="tableWidget">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>380</y>
-      <width>701</width>
-      <height>291</height>
-     </rect>
     </property>
    </widget>
    <widget class="QListView" name="listView_3">
@@ -267,6 +257,16 @@
       <y>90</y>
       <width>701</width>
       <height>261</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTableView" name="TableView">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>380</y>
+      <width>701</width>
+      <height>291</height>
      </rect>
     </property>
    </widget>
