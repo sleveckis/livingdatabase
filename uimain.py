@@ -13,6 +13,7 @@
 import sys
 from PySide6 import QtGui
 from PySide6.QtWidgets import QApplication, QMainWindow, QAbstractItemView
+from PySide6.QtCore import QItemSelectionModel
 from Ui_MainWindow import Ui_MainWindow
 from models.DatabaseConnect import DatabaseConnector
 from models.models import CustomQColumnModel, CustomQTableModel
@@ -46,7 +47,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ui = Ui_MainWindow()
         self.setupUi(self)
 
-        # Column Model
+        # Column Model/View
         self.db_connection = DatabaseConnector()
         self.col_model = CustomQColumnModel(self.db_connection.databases)
         self.col_model.generate_tree() 
@@ -54,10 +55,34 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # only disables innermost list. similar code in models.py for outer list
         self.ColumnView.setEditTriggers(QAbstractItemView.NoEditTriggers)
         
-        # Table Model
+        # Table Model/View
         self.table_model = CustomQTableModel(self.db_connection.get_table_contents())
         self.TableView.setModel(self.table_model)
         self.TableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
+
+        # col_Model's Selection Model (to get what table is being clicked)
+        self. ColumnViewSelectionModel = self.ColumnView.selectionModel()
+        self.create_connections()
+
+    def create_connections(self):
+        self.ColumnView.clicked.connect(self.colViewClick)
+
+    # Slots
+    def colViewClick(self):
+        print("ColumnView clicked")
+        index = self.ColumnView.selectedIndexes()[0]
+        print("Index: ", index)
+        item = self.col_model.itemFromIndex(index).text()
+        print("Item: ", item)
+
+
+    """
+    def show_sel(self):
+        index = self.ColumnViewSelectionModel.selectedIndexes()[0]
+        print("ColumnViewSelectionModel.selectedIndexes[0] is: ", index)
+        item = self.col_model.itemFromIndex(index)
+        print("col_model.itemFromIndex is ", item)
+    """
 
 app = QApplication(sys.argv)
 app.setStyle('Fusion')

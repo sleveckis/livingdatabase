@@ -1,0 +1,8 @@
+ViewWhatever.selectionModel()
+
+or something like that to return the selection model object or at least 
+something that basically resembles that object
+
+
+then look at the repo patrick sent to get an idea about using that model
+for slots and signals
