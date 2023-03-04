@@ -78,19 +78,31 @@ class CustomQTableModel(QtCore.QAbstractTableModel):
     def rowCount(self, parent=None):
         # Returns length of a numpy representation of the pd dataframe
         # tells the data model how many row's we'll insert
-        return len(self._data.values)
+        if self._data is None:
+            return 0
+        else:
+            return len(self._data.values)
 
     def columnCount(self, parent=None):
         # tells the data model how many cols we'll insert
-        return self._data.columns.size 
+
+        if self._data is None:
+            return 0
+        else:
+            return self._data.columns.size 
 
     def data(self, index, role=QtCore.Qt.DisplayRole):
-        if role == QtCore.Qt.DisplayRole:
-            try:
-                # .iat is just a good way to rol, col index dataframes in pd
-                return str(self._data.iat[index.row(), index.column()])
-            except IndexError:
-                return ""
+        if self._data is not None:
+            if role == QtCore.Qt.DisplayRole:
+                try:
+                    # .iat is just a good way to rol, col index dataframes in pd
+                    return str(self._data.iat[index.row(), index.column()])
+                except IndexError:
+                    return ""
+    def applyTable(self, table):
+        print("Applying Table...")
+        self._data = table
+        print("Set table")
 
 """
     LivingDataListModel

@@ -56,12 +56,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ColumnView.setEditTriggers(QAbstractItemView.NoEditTriggers)
         
         # Table Model/View
-        self.table_model = CustomQTableModel(self.db_connection.get_table_contents())
+        # Potentially don't need to start with empty table/model. Keep for now.
+        self.table_model = CustomQTableModel()
         self.TableView.setModel(self.table_model)
         self.TableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        # Display first x rows of table 
+        self.tableSize = 100
 
-        # col_Model's Selection Model (to get what table is being clicked)
-        self. ColumnViewSelectionModel = self.ColumnView.selectionModel()
         self.create_connections()
 
     def create_connections(self):
@@ -69,20 +70,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     # Slots
     def colViewClick(self):
-        print("ColumnView clicked")
         index = self.ColumnView.selectedIndexes()[0]
-        print("Index: ", index)
         item = self.col_model.itemFromIndex(index).text()
         print("Item: ", item)
+        table = self.db_connection.get_table_contents(item, self.tableSize)
+        print(table)
+        self.table_model = CustomQTableModel(table)
+        self.TableView.setModel(self.table_model)
 
-
-    """
-    def show_sel(self):
-        index = self.ColumnViewSelectionModel.selectedIndexes()[0]
-        print("ColumnViewSelectionModel.selectedIndexes[0] is: ", index)
-        item = self.col_model.itemFromIndex(index)
-        print("col_model.itemFromIndex is ", item)
-    """
 
 app = QApplication(sys.argv)
 app.setStyle('Fusion')

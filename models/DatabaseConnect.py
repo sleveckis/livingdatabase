@@ -25,7 +25,7 @@ class DatabaseConnector():
     """
     def __init__(self):
         self.cursor = self.cursor_to_server()
-        self.databases = self.get_databases(self.cursor)
+        self.databases = self.get_databases()
 
     def cursor_to_server(self):
         """
@@ -39,21 +39,17 @@ class DatabaseConnector():
         cur = pg_conn.cursor()
         return cur
 
-    def get_databases(self, cur):
+    def get_databases(self):
         """
-        Parameters:
-        ---------
-            cur
-                A connection to the living database
-
         Returns:
         ---------
             database_dict
                 A dictionary of all the databases within the living database
         """
         # Replace with query from Mike to get a dictionary as in the docstring
-        cur.execute("""SELECT datname FROM pg_catalog.pg_database""")
-        databases = cur.fetchall()
+
+        self.cursor.execute("""SELECT datname FROM pg_catalog.pg_database""")
+        databases = self.cursor.fetchall()
         database_list = []
         for d in databases:
             database_list.append(d[0])
@@ -69,6 +65,8 @@ class DatabaseConnector():
         return test_dba
         #return (database_list)
 
+    #TODO: Because we're getting database names and table names, do a try block or something. Or use a filter. 
+    # Don't want to query a tablename where tablename is actually a databasename
     def get_table_contents(self, table=None, n=None):
         test_table = {
             "What Rock" : ["Basalt", "shale", "obsidian", "quartz", "sdfsfs", "asdfasdf", "sdfasdf", "asdf", "marble"],
@@ -76,7 +74,13 @@ class DatabaseConnector():
             "calories" : [123, 4141, 52343, 123123, 235234, 5345, 2312, 534534, 12313],
             "phone number" : [23123, 12312, 53453, 867, 56567, 9878990 , 56986, 234243, 90897]
         }
+
+        # Placeholder code... switch out with a real query with table name
+        test_table["What Rock"][0] = table
         df = pd.DataFrame(test_table)
+
+        # SQL Query where we get the first n rows of table 'table'
+        # return that dataframe instead
         return df
 
 
