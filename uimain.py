@@ -49,7 +49,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Column Model/View
         self.db_connection = DatabaseConnector()
-        self.col_model = CustomQColumnModel(self.db_connection.databases)
+        self.col_model = CustomQColumnModel(self.db_connection.master_dict)
         self.col_model.generate_tree() 
         self.ColumnView.setModel(self.col_model)
         # only disables innermost list. similar code in models.py for outer list
@@ -69,14 +69,45 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ColumnView.clicked.connect(self.colViewClick)
 
     # Slots
+    """
+        Get a table as a dataframe and set it as the TableView's model so the user can see it
+    """
     def colViewClick(self):
-        index = self.ColumnView.selectedIndexes()[0]
-        item = self.col_model.itemFromIndex(index).text()
+        # Get the text of whatever table the user has selected
+        user_select_index = self.ColumnView.selectedIndexes()[0]
+        item = user_select_index.data()
+        print("userselectindex:", item)
+        # item = self.col_model.itemFromIndex(user_select_index).text()
         print("Item: ", item)
-        table = self.db_connection.get_table_contents(item, self.tableSize)
-        print(table)
-        self.table_model = CustomQTableModel(table)
-        self.TableView.setModel(self.table_model)
+
+        # Find relevant database name to chosen table (we need this to query the living database)
+        dict_keys = list(self.db_connection.master_dict.keys())
+        dict_vals = list(self.db_connection.master_dict.values())
+        # Note that we don't actually care about where the item is in 
+        # the list, we just need the list's index in the meta-list
+        dict_index = None
+        print("Dict index (should be None):", dict_index)
+        for count, table in enumerate(dict_vals):
+            try:
+                table.index(item)
+            except:
+                pass
+            else:
+                dict_index = count
+
+        
+        if dict_index is not None:
+            db_name = dict_keys[dict_index]
+            print("Dict index:", dict_index)
+            print("Database: ", db_name)
+            print("Table: ", item)
+            print("--------------------------------")
+
+            # Get table as a pandas dataframe, passing in database name and table name
+            table = self.db_connection.get_table_contents(database=db_name, table=item, n=self.tableSize)
+            # Make a table model with the dataframe, and set the View to it
+            self.table_model = CustomQTableModel(table)
+            self.TableView.setModel(self.table_model)
 
 
 app = QApplication(sys.argv)

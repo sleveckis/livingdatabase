@@ -1,0 +1,40 @@
+ViewWhatever.selectionModel()
+
+or something like that to return the selection model object or at least 
+something that basically resembles that object
+
+
+then look at the repo patrick sent to get an idea about using that model
+for slots and signals
+DONE (didn't need to use selection model, view object had a builtin method)
+----------------------------------------------------
+those are done, now need to get a dictionary of databases and their constituent tables.
+
+currently can get list of databaes easily, but getting all tables therein is an issue
+
+(DatabaseConnect.py)
+------------------------------------------------------------------------------
+extra funcitonality:
+save dictionary data into a file so we don't have to connect, 
+have a resfresh button to re-load that if they thinkthey need to regrab the data
+
+-------------------------------------------------------------------------------
+Issue: C:\Users\leveckis\Documents\code\living_database\livingdatabase\models\DatabaseC
+onnect.py:141: UserWarning: pandas only supports SQLAlchemy connectable (engine/
+connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 ob
+jects are not tested. Please consider using SQLAlchemy.
+  df2 = pd.read_sql_query(sql, pg_conn)
+
+    Might have to use SQLAlchemy
+
+Huge Issue: Method of getting relevant database gets wrong database if multiple Databases
+have a table with the same name (this is common)
+
+Medium issue: Not really handling the fact that I'll still try to find a table when given a 
+database name because I'm doing it on click.
+
+
+Minor issue: Allow user to resize window
+
+Minor issue: slidery drag thing that moves border between (table/database) and (table viewport) 
+so that one can be larger
