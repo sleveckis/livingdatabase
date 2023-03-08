@@ -79,20 +79,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # item = self.col_model.itemFromIndex(user_select_index).text()
         print("Item: ", item)
 
-        # Find relevant database name to chosen table (we need this to query the living database)
+        # Check to see if the user selected item is a database or table
         dict_keys = list(self.db_connection.master_dict.keys())
         dict_vals = list(self.db_connection.master_dict.values())
-        # Note that we don't actually care about where the item is in 
-        # the list, we just need the list's index in the meta-list
         clickIsTable = False
         try:
             dict_keys.index(item)
         except:
+            # It's a table
             clickisTable = True
         else:
+            # It's a database
             print("That's not a table that's a database!")
 
-        if clickIsTable:            
+        if clickIsTable is False:            
             dict_index = None
             print("Dict index (should be None):", dict_index)
             for count, table in enumerate(dict_vals):
