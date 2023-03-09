@@ -28,6 +28,7 @@ class CustomQColumnModel(QStandardItemModel):
         super(CustomQColumnModel, self).__init__()
         if dba is not None:
             self.dba = dba 
+            self.sort_dba_alphabetically()
             self.setVerticalHeaderItem(0, QStandardItem("Database"))
             self.setVerticalHeaderItem(1, QStandardItem("Table"))
             self.databaseListLength = 0
@@ -59,6 +60,12 @@ class CustomQColumnModel(QStandardItemModel):
 
             self.tableListLengths.append(table_count)
         self.databaseListLength = len(self.tableListLengths)
+
+    def sort_dba_alphabetically(self):
+        self.dba = dict(sorted(self.dba.items()))
+        for table_list in self.dba:
+            self.dba[table_list] = sorted(self.dba[table_list])
+
         
             
 
@@ -74,6 +81,10 @@ class CustomQTableModel(QtCore.QAbstractTableModel):
         #QtCore.QAbstractTableModel.__init__(self, parent)
         super().__init__()
         self._dataframe = data
+
+        if data is None:
+            # Display 'no table' message
+            pass
 
     def rowCount(self, parent=None):
         # Returns length of a numpy representation of the pd dataframe
@@ -105,15 +116,30 @@ class CustomQTableModel(QtCore.QAbstractTableModel):
         """Override method from QAbstractTableModel
 
         Return dataframe index as vertical header data and columns as horizontal header data.
+        Basically, allow the user to see the column headers 
         """
         if role == QtCore.Qt.DisplayRole:
             if orientation == QtCore.Qt.Horizontal:
                 return str(self._dataframe.columns[section])
 
             if orientation == QtCore.Qt.Vertical:
-                return str(self._dataframe.index[section])
+                # Add one so the row counts start at 1, not zero
+                return str(self._dataframe.index[section] + 1)
 
         return None           
+
+class CustomThread(QtCore.QThread):
+
+    newProgress = QtCore.Signal(str)
+
+    def __init__(self, i):
+        super(MyProcess, self).__init__()
+        self.id = i
+
+    def run(self):
+        for j in range(10):
+            self.newProgress.emit('task %d at %d%%' % (self.id, j*10))
+            time.sleep(0.2)
 
 
 """

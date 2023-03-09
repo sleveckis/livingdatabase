@@ -1,23 +1,5 @@
-ViewWhatever.selectionModel()
-
-or something like that to return the selection model object or at least 
-something that basically resembles that object
-
-
-then look at the repo patrick sent to get an idea about using that model
-for slots and signals
-DONE (didn't need to use selection model, view object had a builtin method)
-----------------------------------------------------
-those are done, now need to get a dictionary of databases and their constituent tables.
-
-currently can get list of databaes easily, but getting all tables therein is an issue
-
-(DatabaseConnect.py)
-------------------------------------------------------------------------------
-extra funcitonality:
-save dictionary data into a file so we don't have to connect, 
-have a resfresh button to re-load that if they thinkthey need to regrab the data
-
+-------------------------------------------------------------------------------
+Current Issues
 -------------------------------------------------------------------------------
 Issue: C:\Users\leveckis\Documents\code\living_database\livingdatabase\models\DatabaseC
 onnect.py:141: UserWarning: pandas only supports SQLAlchemy connectable (engine/
@@ -27,14 +9,45 @@ jects are not tested. Please consider using SQLAlchemy.
 
     Might have to use SQLAlchemy
 
-Huge Issue: Method of getting relevant database gets wrong database if multiple Databases
-have a table with the same name (this is common)
+Issue: confine database/table window so that it doesnt jump when user selects a table. 
+Never will need a third column. Ideally just restrict the window to two columns
 
-Medium issue: Not really handling the fact that I'll still try to find a table when given a 
-database name because I'm doing it on click.
-
-
-Minor issue: Allow user to resize window
+Issue: Allow user to resize window
 
 Minor issue: slidery drag thing that moves border between (table/database) and (table viewport) 
 so that one can be larger
+
+------------------------------------------------------------------------------
+Extra Functionality:
+------------------------------------------------------------------------------
+save dictionary data into a file so we don't have to connect, 
+have a resfresh button to re-load that if they thinkthey need to regrab the data
+    similarly, caching tables themselves
+
+------------------------------------------------------------------------------
+Solved Issues
+------------------------------------------------------------------------------
+Huge Issue: ViewWhatever.selectionModel()
+or something like that to return the selection model object or at least 
+something that basically resembles that object
+then look at the repo patrick sent to get an idea about using that model
+for slots and signals
+DONE (didn't need to use selection model, view object had a builtin method)
+
+Medium Issue: Still executing queries for tables when the table name was actually a database name,
+due to the fact that we're execute that method every time the user clicks on something
+(and of course sometimes they'll click on a database)
+
+Huge Issue: Method of getting relevant database gets wrong database if multiple Databases
+have a table with the same name (this is common)
+
+Issue: User can't see fields/column names of table
+
+Medium issue: should everything that shows up in 'table' be something we can view as a table?
+Some things aren't rendering still... or are they? Check to be sure, but when I have PGAdmin
+so I can also check that whatever's rendering is rendering correctly
+ie, clicking on a table in xmat says "relation [table_name] does not exist"... 
+  - The solution was that any table with capital(s) in its name, or starts with a number, must be surrounded by quotes
+  in a query
+
+Minor issue: display database and table lists in alphabetical order. havent done table lists

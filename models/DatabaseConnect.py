@@ -121,9 +121,7 @@ class DatabaseConnector():
 
         # If a table name contains an uppercase letter, we need to put it in quotation marks
         # because of some horrible old ANSI standard for goblins
-        if self.contains_upper(table):
-            table = f'"{table}"'
-
+        table = self.process_for_quotes(table)
         print("-------------------------------------------")
         print("Connecting to ", database, "with table", table)
         print("conn_string: ", conn_string)
@@ -136,10 +134,19 @@ class DatabaseConnector():
 
         return df
 
-    def contains_upper(self, input):
-        result = False
-        for character in input:
+    def process_for_quotes(self, table_input):
+        """
+            Surround the table name in quotes if it starts with a number or contains a capital letter (ANSI standard)
+        """
+        needs_quotes = False
+        for character in table_input:
             if character.isupper():
-                result = True
-        return result
+                needs_quotes = True
+
+        if table_input[0].isdigit():
+                needs_quotes = True
+
+        if needs_quotes:
+            table_input = f'"{table_input}"'
+        return table_input
 
