@@ -117,29 +117,29 @@ class DatabaseConnector():
 
     def get_table_contents(self, database=None, table=None, n=None):
         # Placeholder code... switch out with a real query with table name
-        test_table = {
-            "What Rock" : ["Basalt", "shale", "obsidian", "quartz", "sdfsfs", "asdfasdf", "sdfasdf", "asdf", "marble"],
-            "How old is rock" : [101, 202, 333, 40151, 1551515, 663, 991, 123, 12],
-            "calories" : [123, 4141, 52343, 123123, 235234, 5345, 2312, 534534, 12313],
-            "phone number" : [23123, 12312, 53453, 867, 56567, 9878990 , 56986, 234243, 90897]
-        }
-        
-        """
-        # SQL Query where we get the first n rows of table 'table'
-        # return that dataframe instead
-        query = '''SELECT * FROM ''' + table + ''' LIMIT 10'''
-        print ("Q: ", type(query), query)
-        try:
-            self.cursor.execute(query)
-        except:
-            print("table fetch execute Didn't work!")
-       """ 
         conn_string = self.conn_string + '/' + database
+
+        # If a table name contains an uppercase letter, we need to put it in quotation marks
+        # because of some horrible old ANSI standard for goblins
+        if self.contains_upper(table):
+            table = f'"{table}"'
+
+        print("-------------------------------------------")
+        print("Connecting to ", database, "with table", table)
+        print("conn_string: ", conn_string)
+        print("-------------------------------------------")
 
         with psycopg2.connect(conn_string) as pg_conn:
             sql = "select * from {0} LIMIT 100".format(table)
-            df2 = pd.read_sql_query(sql, pg_conn)
+            df = pd.read_sql_query(sql, pg_conn)
+            print(df)
 
-        test_table["What Rock"][0] = table
-        df = pd.DataFrame(test_table)
-        return df2
+        return df
+
+    def contains_upper(self, input):
+        result = False
+        for character in input:
+            if character.isupper():
+                result = True
+        return result
+

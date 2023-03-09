@@ -73,36 +73,48 @@ class CustomQTableModel(QtCore.QAbstractTableModel):
     def __init__(self, data=None):
         #QtCore.QAbstractTableModel.__init__(self, parent)
         super().__init__()
-        self._data = data
+        self._dataframe = data
 
     def rowCount(self, parent=None):
         # Returns length of a numpy representation of the pd dataframe
         # tells the data model how many row's we'll insert
-        if self._data is None:
+        if self._dataframe is None:
             return 0
         else:
-            return len(self._data.values)
+            return len(self._dataframe.values)
 
     def columnCount(self, parent=None):
         # tells the data model how many cols we'll insert
 
-        if self._data is None:
+        if self._dataframe is None:
             return 0
         else:
-            return self._data.columns.size 
+            return self._dataframe.columns.size 
 
     def data(self, index, role=QtCore.Qt.DisplayRole):
-        if self._data is not None:
+        if self._dataframe is not None:
             if role == QtCore.Qt.DisplayRole:
                 try:
                     # .iat is just a good way to rol, col index dataframes in pd
-                    return str(self._data.iat[index.row(), index.column()])
+                    return str(self._dataframe.iat[index.row(), index.column()])
                 except IndexError:
                     return ""
-    def applyTable(self, table):
-        print("Applying Table...")
-        self._data = table
-        print("Set table")
+
+
+    def headerData(self, section: int, orientation: QtCore.Qt.Orientation, role: QtCore.Qt.ItemDataRole):
+        """Override method from QAbstractTableModel
+
+        Return dataframe index as vertical header data and columns as horizontal header data.
+        """
+        if role == QtCore.Qt.DisplayRole:
+            if orientation == QtCore.Qt.Horizontal:
+                return str(self._dataframe.columns[section])
+
+            if orientation == QtCore.Qt.Vertical:
+                return str(self._dataframe.index[section])
+
+        return None           
+
 
 """
     LivingDataListModel

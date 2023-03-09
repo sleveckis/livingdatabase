@@ -47,8 +47,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ui = Ui_MainWindow()
         self.setupUi(self)
 
-        # Column Model/View
+        # Database object
         self.db_connection = DatabaseConnector()
+
+        # Column Model/View
         self.col_model = CustomQColumnModel(self.db_connection.master_dict)
         self.col_model.generate_tree() 
         self.ColumnView.setModel(self.col_model)
@@ -63,6 +65,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Display first x rows of table 
         self.tableSize = 100
 
+        # Connect user interaction to relevant methods
         self.create_connections()
 
     def create_connections(self):
@@ -75,16 +78,59 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def colViewClick(self):
         # Get the text of whatever table the user has selected
         user_select_index = self.ColumnView.selectedIndexes()[0]
-        item = user_select_index.data()
-        # item = self.col_model.itemFromIndex(user_select_index).text()
-        print("Item: ", item)
+        # The relevant QStandardItem object in the Column Model
+        item = self.col_model.itemFromIndex(user_select_index)
+        item_text = item.text()
+        parent_item = item.parent()
+        
+        # If the item is a database
+        if parent_item is None:
+            print("---------------------------------")
+            print("DATABASE: ", item_text)
+            print("---------------------------------")
+            item_is_table = False
+
+        # If the item is a table
+        else:
+            db_name = parent_item.text()
+            item_is_table = True
+            print("---------------------------------")
+            print("Table: ", item_text)
+            print("Table's parent databae: ", db_name)
+            print("---------------------------------")
+
+
+            # Get table as a pandas dataframe, passing in database name and table name
+            table = self.db_connection.get_table_contents(database=db_name, table=item_text, n=self.tableSize)
+            # Make a table model with the dataframe, and set the View to it
+            self.table_model = CustomQTableModel(table)
+            self.TableView.setModel(self.table_model)
+    """
+
+    # Old method of implementation
+
+    def colViewClick(self):
+        # Get the text of whatever table the user has selected
+        user_select_index = self.ColumnView.selectedIndexes()[0]
+        # item = user_select_index.data()
+        item = self.col_model.itemFromIndex(user_select_index)
+        item_text = item.text()
+        print("Item string/text: ", item_text)
+
+        parent_item = item.parent()
+        if parent_item is not None:
+            print("---------------------------------")
+            print("Hopefully the relevant database: ", parent_item.text())
+            print("---------------------------------")
+        else:
+            print("~~~~This is a database, it has no parent")
 
         # Check to see if the user selected item is a database or table
         dict_keys = list(self.db_connection.master_dict.keys())
         dict_vals = list(self.db_connection.master_dict.values())
         clickIsTable = False
         try:
-            dict_keys.index(item)
+            dict_keys.index(item_text)
         except:
             # It's a table
             clickisTable = True
@@ -97,7 +143,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             print("Dict index (should be None):", dict_index)
             for count, table in enumerate(dict_vals):
                 try:
-                    table.index(item)
+                    table.index(item_text)
                 except:
                     pass
                 else:
@@ -108,15 +154,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 db_name = dict_keys[dict_index]
                 print("Dict index:", dict_index)
                 print("Database: ", db_name)
-                print("Table: ", item)
+                print("Table: ", item_text)
                 print("--------------------------------")
 
                 # Get table as a pandas dataframe, passing in database name and table name
-                table = self.db_connection.get_table_contents(database=db_name, table=item, n=self.tableSize)
+                table = self.db_connection.get_table_contents(database=db_name, table=item_text, n=self.tableSize)
                 # Make a table model with the dataframe, and set the View to it
                 self.table_model = CustomQTableModel(table)
                 self.TableView.setModel(self.table_model)
-
+    """
 
 app = QApplication(sys.argv)
 app.setStyle('Fusion')
